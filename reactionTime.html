@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test your Reaction Time!</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        #container {
+            background-color: #3daae0;
+            height: 100vh;
+            width: 100vw;
+            position: absolute;
+        }
+        #textContainer {
+            position: absolute;
+            height: 100vh;
+            width: 100vw;
+
+        }
+        #titleText {
+            text-align: center;
+            margin-top: 45vh;
+            color: white;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            font-size: 5vh;
+
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <div id="textContainer">
+            <h1 id="titleText"> Click to play! </h1>
+        </div>
+    </div>
+    
+    <script>
+        const textHolder = document.getElementById('titleText');
+        const backgroundHolder = document.getElementById('textContainer');
+
+        let createdTime;
+        let clickedTime;
+        let reactionTime;
+        let switchTimer;
+
+        backgroundHolder.addEventListener('click', startGame);
+        
+
+
+        function startGame () {
+            textHolder.innerHTML = '... <br><br><br> Wait for green!';
+            textHolder.style.marginTop = '28vh';
+            backgroundHolder.style.backgroundColor = 'red';
+
+            switchTimer = Math.round((Math.random() * 3000 ) + 2000);
+            console.log(switchTimer);
+
+            setTimeout(setGreen, switchTimer);
+            backgroundHolder.removeEventListener('click', startGame);
+            backgroundHolder.addEventListener('click', clickedNotAllow);
+            
+        }
+
+        function setGreen () {
+            backgroundHolder.addEventListener('click', clickedAllow);
+            backgroundHolder.removeEventListener('click', clickedNotAllow);
+            createdTime = Date.now();
+
+            textHolder.innerHTML = 'Click!';
+            textHolder.style.marginTop = '45vh';
+            backgroundHolder.style.backgroundColor = '#4bdb6a';
+
+        }
+
+        function clickedAllow () {
+            clickedTime = Date.now();
+            
+            reactionTime = (clickedTime - createdTime + 'ms');
+            console.log(reactionTime);
+
+            textHolder.innerHTML = 'Your reaction time is ' + reactionTime;
+            backgroundHolder.style.backgroundColor = '#3daae0';
+            backgroundHolder.removeEventListener('click', clickedAllow);
+            backgroundHolder.addEventListener('click', reset);
+        }
+
+        function clickedNotAllow () {
+            clickedTime = Date.now();
+            
+            reactionTime = ('You clicked too soon!');
+            console.log(reactionTime);
+
+            textHolder.innerHTML = reactionTime;
+            textHolder.style.marginTop = '45vh';
+            backgroundHolder.style.backgroundColor = '#3daae0';
+            backgroundHolder.removeEventListener('click', clickedNotAllow);
+            backgroundHolder.removeEventListener('click', clickedAllow);
+            backgroundHolder.addEventListener('click', reset);
+
+        }
+
+        function reset () {
+            window.location.reload();
+        }
+
+    </script>
+</body>
+</html>
